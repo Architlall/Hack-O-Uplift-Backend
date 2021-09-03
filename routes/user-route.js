@@ -18,7 +18,7 @@ userrouter.post('/postsawo',async(req,res)=>{
         .then((result)=>{
             //Passes Json data as well as directs to dashboard
             console.log(JSON.stringify(result))
-            res.json(result).redirect('/dashboard')
+            res.redirect('/dashboard')
             //console.log('user Registered')
         })
         .catch((err)=>{
@@ -27,7 +27,8 @@ userrouter.post('/postsawo',async(req,res)=>{
     } else {
         //If user exists then directly pass the Json data n redirect as well
         const data = JSON.stringify(checkuser)
-        res.json(checkuser).redirect('/dashboard');
+        console.log(data);
+        res.redirect('/dashboard');
     }
 
 })
