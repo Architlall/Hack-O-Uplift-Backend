@@ -1,7 +1,40 @@
 const express = require('express');
 const userrouter = express.Router()
 const userReceiver = require('../models/User');
-//Reciever Dashboard
+
+//Form for a user to fill up
+userrouter.get('/postsawo',(req,res)=>{
+    //pass the form from the front end
+    res.render('form')
+})
+//POST Request to be filled as a details form of the user after sawo check up (Requires Axios to send uid data in body)
+userrouter.post('/postsawo',async(req,res)=>{
+    const newRequest = new userReceiver(req.body)
+    //This checks if the user exists or not based on SAWO Uid
+    const checkuser = await userReceiver.find({uid: req.body.uid})
+    //If not present then saves all the details given in the User.js Schema in DB
+    if(checkuser.length!=0){
+        newRequest.save()
+        .then((result)=>{
+            //Passes Json data as well as directs to dashboard
+            console.log(JSON.stringify(result))
+            res.json(result).redirect('/dashboard')
+            //console.log('user Registered')
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+    } else {
+        //If user exists then directly pass the Json data n redirect as well
+        const data = JSON.stringify(checkuser)
+        res.json(checkuser).redirect('/dashboard');
+    }
+
+})
+
+//This is unused routes don't bother about these if required then shall b added.
+
+/* //Reciever Dashboard
 userrouter.get('/receiver/profiles',async (req,res)=>{
     await userReceiver.find()
     .then((result)=>{
@@ -11,26 +44,8 @@ userrouter.get('/receiver/profiles',async (req,res)=>{
     .catch((err)=>{
         console.log(err)
     })
-})
-//Form for Reciever
-userrouter.get('/receiver',(req,res)=>{
-    res.render('form')
-})
-//Fill in details for blood request
-userrouter.post('/receiver',(req,res)=>{
-    const newRequest = new userReceiver(req.body)
-    newRequest.save()
-    .then((result)=>{
-        res.json(result)
-        console.log(JSON.stringify(result))
-        //console.log('Request Registered')
-    })
-    .catch((err)=>{
-        console.log(err)
-    })
-
-})
-//Get details of specific reciever
+}) */
+/* //Get details of specific reciever
 userrouter.get('/receiver/:id',(req,res)=>{
     const id = req.params.id
     userReceiver.findById(id)
@@ -71,5 +86,5 @@ userrouter.put('/receiver/edit/:id',async(req,res)=>{
             console.log(err)
         }
     }  
-})
+}) */
 module.exports = userrouter;

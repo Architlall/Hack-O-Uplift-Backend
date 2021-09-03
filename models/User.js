@@ -34,10 +34,15 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    location:{
+    //These fields are to be present in the body while filling up details page between dashboard and SAWOLogin
+    uid:{
         type: String,
         required: true
     },
+    phno:{
+        type: String,
+        required: true
+    }
 });
 const userReciever = mongoose.model('userReciever',userSchema);
 module.exports = userReciever;

@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-
-
 const addressSchema = new mongoose.Schema({
     addressLine1: {
         type: String,
@@ -34,6 +32,7 @@ const reqSchema = new mongoose.Schema({
         type: String,
         required: true     
     },
+    //These fields are to be present in the body while filling up Request Blood Form
     uid: {
         type: String,
         required: true

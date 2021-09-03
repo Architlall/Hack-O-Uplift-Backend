@@ -1,12 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const bloodReceiver = require('../models/receiver');
-//Reciever Dashboard
+/*Reciever Dashboard requires Axios to send uid to filter 
+    and show only requests made by this specific user.
+*/
 router.get('/dashboard',async (req,res)=>{
     await bloodReceiver.find({uid: req.body.uid})
     .then((result)=>{
         result.forEach(async (data)=>{
             console.log(data.status)
+            /*Those requests that have boolean true will be deleted 
+                might put out a window/popup to display then delete them here as a notification 
+            */
             if(data.status){
                 await bloodReceiver.findByIdAndRemove({_id: data. id})
             }
@@ -18,11 +23,11 @@ router.get('/dashboard',async (req,res)=>{
         console.log(err)
     })
 })
-//Form for Reciever
+//GET Request Form for Reciever to fill for a request
 router.get('/bloodrequest',(req,res)=>{
     res.render('form')
 })
-//Fill in details for blood request
+//POST Request to fill in details for blood request (Requires Axios to register requests of uid and phno)
 router.post('/bloodrequest',(req,res)=>{
     const newRequest = new bloodReceiver(req.body)
     console.log(req.body)
@@ -37,20 +42,7 @@ router.post('/bloodrequest',(req,res)=>{
     })
 
 })
-//Pending Requests Board
-/*
-router.get('/pendingbloodrequests',async (req,res)=>{
-    await bloodReciever.find()
-    .then((result)=>{
-        console.log(result)
 
-        //res.render('pending',{reqs:result})
-    })
-    .catch((err)=>{
-        console.log(err)
-    })
-})
-*/
 //Get details of specific blood request
 router.get('/bloodrequest/:id',(req,res)=>{
     const id = req.params.id
@@ -65,7 +57,7 @@ router.get('/bloodrequest/:id',(req,res)=>{
             console.log(err);
         })
 })
-//Edit Request Form
+//Edit Request Form Route
 router.get('/bloodrequest/edit/:id',async (req,res)=>{
     const report = await bloodReceiver.findOne({_id: req.params.id})
     if(!report){
@@ -76,7 +68,7 @@ router.get('/bloodrequest/edit/:id',async (req,res)=>{
         res.render('form')
     }
 })
-//Update Request Form
+//Update Request Form submitted by the receiver
 router.put('/bloodrequest/edit/:id',async(req,res)=>{
     let report = await bloodReceiver.findById(req.params.id)
     if(!report){
@@ -93,7 +85,8 @@ router.put('/bloodrequest/edit/:id',async(req,res)=>{
         }
     }  
 })
-//Delete request Form
+
+//Delete request Form if receiver doesnt want it right now
 router.get('/bloodrequest/delete/:id',async(req,res)=>{
     let report = await bloodReceiver.findById(req.params.id)
     console.log(report)
@@ -107,3 +100,18 @@ router.get('/bloodrequest/delete/:id',async(req,res)=>{
     }
 })
 module.exports = router;
+
+//Pending Requests Board
+/*
+router.get('/pendingbloodrequests',async (req,res)=>{
+    await bloodReciever.find()
+    .then((result)=>{
+        console.log(result)
+
+        //res.render('pending',{reqs:result})
+    })
+    .catch((err)=>{
+        console.log(err)
+    })
+})
+*/
