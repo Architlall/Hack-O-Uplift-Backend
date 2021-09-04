@@ -5,12 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "cd Hack-O-Uplift-Frontend && npm run build",
-        "install-Hack-O-Uplift-Frontend": "cd Hack-O-Uplift-Frontend && npm install",
-        "heroku-postbuild": "npm run install-Hack-O-Uplift-Frontend && npm run build",
-        "server": "nodemon index.js",
-        "develop": "concurrently --kill-others-on-fail \"npm run server\" \"npm run start --prefix Hack-O-Uplift-Frontend\"",
-        "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run start --prefix Hack-O-Uplift-Frontend\""
+    "start":"nodemon index.js",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false cd Hack-O-Uplift-Frontend && npm run build"
   },
   "engines": {
     "node": "10.16.0"
