@@ -3,10 +3,12 @@ const userrouter = express.Router()
 const User = require('../models/User');
 
 //Form for a user to fill up
+
 userrouter.get('/sawo/:uid',async(req,res)=>{
     //pass the form from the front end
     const checkuser = await User.find({uid: req.params.uid})
     
+
     if(checkuser.length!==0){
         res.json({check:'true'})
     } else {
@@ -16,11 +18,9 @@ userrouter.get('/sawo/:uid',async(req,res)=>{
 //POST Request to be filled as a details form of the user after sawo check up (Requires Axios to send uid data in body)
 userrouter.post('/postsawo',async(req,res)=>{
     const newRequest = new User(req.body)
+
     console.log(req.body)
 
-    
-    //This checks if the user exists or not based on SAWO Uid
-  
     const checkuser = await User.find({uid: req.body.uid})
     //If not present then saves all the details given in the User.js Schema in DB
     if(checkuser.length===0){
