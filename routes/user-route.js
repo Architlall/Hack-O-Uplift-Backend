@@ -1,12 +1,13 @@
 const express = require('express');
 const userrouter = express.Router()
-const userReceiver = require('../models/User');
+const User = require('../models/User');
 
 //Form for a user to fill up
-userrouter.get('/postsawo',(req,res)=>{
+userrouter.get('/sawo/:uid',async(req,res)=>{
     //pass the form from the front end
-    const checkuser = await userReceiver.find({uid: req.body.uid})
-    if(checkuser.length===0){
+    const checkuser = await User.find({uid: req.params.uid})
+    
+    if(checkuser.length!==0){
         res.json({check:'true'})
     } else {
         res.json({check:'false'})
@@ -14,9 +15,13 @@ userrouter.get('/postsawo',(req,res)=>{
 })
 //POST Request to be filled as a details form of the user after sawo check up (Requires Axios to send uid data in body)
 userrouter.post('/postsawo',async(req,res)=>{
-    const newRequest = new userReceiver(req.body)
+    const newRequest = new User(req.body)
+    console.log(req.body)
+
+    
     //This checks if the user exists or not based on SAWO Uid
-    const checkuser = await userReceiver.find({uid: req.body.uid})
+  
+    const checkuser = await User.find({uid: req.body.uid})
     //If not present then saves all the details given in the User.js Schema in DB
     if(checkuser.length===0){
         newRequest.save()
@@ -33,17 +38,21 @@ userrouter.post('/postsawo',async(req,res)=>{
     } else {
         //If user exists then directly pass the Json data n redirect as well
         const data = JSON.stringify(checkuser)
+         res.json({ check: "true" });
         console.log(data);
         res.json({check:'false'})
     }
 
 })
 
+
+
+
 //This is unused routes don't bother about these if required then shall b added.
 
 /* //Reciever Dashboard
 userrouter.get('/receiver/profiles',async (req,res)=>{
-    await userReceiver.find()
+    await User.find()
     .then((result)=>{
         console.log(JSON.stringify(result))
         res.json(result)
@@ -53,9 +62,9 @@ userrouter.get('/receiver/profiles',async (req,res)=>{
     })
 }) */
 /* //Get details of specific reciever
-userrouter.get('/receiver/:id',(req,res)=>{
+userrouter.get('/receiver/:id',(req,res)=>{`
     const id = req.params.id
-    userReceiver.findById(id)
+    User.findById(id)
     .then((result)=>{
             res.json(result)
             console.log(JSON.stringify(result))
@@ -68,7 +77,7 @@ userrouter.get('/receiver/:id',(req,res)=>{
 })
 //Edit Request Form
 userrouter.get('/receiver/edit/:id',async (req,res)=>{
-    const data = await userReceiver.findOne({_id: req.params.id})
+    const data = await User.findOne({_id: req.params.id})
     if(!data){
         res.status(404).json({"error":"404"})
     } else {
@@ -79,12 +88,12 @@ userrouter.get('/receiver/edit/:id',async (req,res)=>{
 })
 //Update Request Form
 userrouter.put('/receiver/edit/:id',async(req,res)=>{
-    let data = await userReceiver.findById(req.params.id)
+    let data = await User.findById(req.params.id)
     if(!data){
         res.status(404).json({"error":"404"})
     } else {
         try{
-            data = await userReceiver.findOneAndUpdate({_id: req.params.id},req.body,{
+            data = await User.findOneAndUpdate({_id: req.params.id},req.body,{
                 new: true,
                 runValidators: true
             })
