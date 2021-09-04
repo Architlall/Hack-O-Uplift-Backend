@@ -44,7 +44,32 @@ userrouter.post('/postsawo',async(req,res)=>{
     }
 
 })
-
+userrouter.get('/user/edit/:id',async (req,res)=>{
+    const data = await User.findOne({_id: req.params.id})
+    if(!data){
+        res.status(404).json({"error":"404"})
+    } else {
+        res.json(data)
+        console.log(JSON.stringify(data))
+    }
+})
+//Update Request Form
+userrouter.put('/user/edit/:id',async(req,res)=>{
+    let data = await User.findById(req.params.id)
+    if(!data){
+        res.status(404).json({"error":"404"})
+    } else {
+        try{
+            data = await User.findOneAndUpdate({_id: req.params.id},req.body,{
+                new: true,
+                runValidators: true
+            })
+            //res.redirect('/dashboard')
+        } catch (err) {
+            console.log(err)
+        }
+    }  
+})
 
 
 
@@ -76,31 +101,5 @@ userrouter.get('/receiver/:id',(req,res)=>{`
         })
 })
 //Edit Request Form
-userrouter.get('/receiver/edit/:id',async (req,res)=>{
-    const data = await User.findOne({_id: req.params.id})
-    if(!data){
-        res.status(404).json({"error":"404"})
-    } else {
-        res.json(data)
-        console.log(JSON.stringify(data))
-        res.render('form')
-    }
-})
-//Update Request Form
-userrouter.put('/receiver/edit/:id',async(req,res)=>{
-    let data = await User.findById(req.params.id)
-    if(!data){
-        res.status(404).json({"error":"404"})
-    } else {
-        try{
-            data = await User.findOneAndUpdate({_id: req.params.id},req.body,{
-                new: true,
-                runValidators: true
-            })
-            res.redirect('/dashboard')
-        } catch (err) {
-            console.log(err)
-        }
-    }  
-}) */
+ */
 module.exports = userrouter;
