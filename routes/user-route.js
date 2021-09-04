@@ -3,9 +3,12 @@ const userrouter = express.Router()
 const User = require('../models/User');
 
 //Form for a user to fill up
-userrouter.get('/postsawo',async (req,res)=>{
+
+userrouter.get('/sawo/:uid',async(req,res)=>{
     //pass the form from the front end
-    const checkuser = await User.find({uid: req.body.uid})
+    const checkuser = await User.find({uid: req.params.uid})
+    
+
     if(checkuser.length!==0){
         res.json({check:'true'})
     } else {
@@ -15,7 +18,9 @@ userrouter.get('/postsawo',async (req,res)=>{
 //POST Request to be filled as a details form of the user after sawo check up (Requires Axios to send uid data in body)
 userrouter.post('/postsawo',async(req,res)=>{
     const newRequest = new User(req.body)
-    //This checks if the user exists or not based on SAWO Uid
+
+    console.log(req.body)
+
     const checkuser = await User.find({uid: req.body.uid})
     //If not present then saves all the details given in the User.js Schema in DB
     if(checkuser.length===0){
@@ -33,11 +38,15 @@ userrouter.post('/postsawo',async(req,res)=>{
     } else {
         //If user exists then directly pass the Json data n redirect as well
         const data = JSON.stringify(checkuser)
+         res.json({ check: "true" });
         console.log(data);
         res.json({check:'false'})
     }
 
 })
+
+
+
 
 //This is unused routes don't bother about these if required then shall b added.
 
@@ -53,7 +62,7 @@ userrouter.get('/receiver/profiles',async (req,res)=>{
     })
 }) */
 /* //Get details of specific reciever
-userrouter.get('/receiver/:id',(req,res)=>{
+userrouter.get('/receiver/:id',(req,res)=>{`
     const id = req.params.id
     User.findById(id)
     .then((result)=>{

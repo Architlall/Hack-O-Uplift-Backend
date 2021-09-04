@@ -27,9 +27,9 @@ const userSchema = new mongoose.Schema({
     email:{
         type: String,
         required: true,
-        unique: true
+        // unique: true
     },
-    address:[addressSchema],
+    address:addressSchema,
     bloodgroup:{
         type: String,
         required: true

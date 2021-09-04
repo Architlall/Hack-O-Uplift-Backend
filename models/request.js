@@ -23,7 +23,7 @@ const reqSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    address:[addressSchema],
+    address:addressSchema,
     bloodgroup:{
         type: String,
         required: true
