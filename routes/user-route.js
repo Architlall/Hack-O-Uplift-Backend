@@ -5,7 +5,12 @@ const userReceiver = require('../models/User');
 //Form for a user to fill up
 userrouter.get('/postsawo',(req,res)=>{
     //pass the form from the front end
-    res.render('form')
+    const checkuser = await userReceiver.find({uid: req.body.uid})
+    if(checkuser.length===0){
+        res.json({check:'true'})
+    } else {
+        res.json({check:'false'})
+    }
 })
 //POST Request to be filled as a details form of the user after sawo check up (Requires Axios to send uid data in body)
 userrouter.post('/postsawo',async(req,res)=>{
@@ -13,12 +18,13 @@ userrouter.post('/postsawo',async(req,res)=>{
     //This checks if the user exists or not based on SAWO Uid
     const checkuser = await userReceiver.find({uid: req.body.uid})
     //If not present then saves all the details given in the User.js Schema in DB
-    if(checkuser.length!=0){
+    if(checkuser.length===0){
         newRequest.save()
         .then((result)=>{
             //Passes Json data as well as directs to dashboard
             console.log(JSON.stringify(result))
-            res.redirect('/dashboard')
+            //res.redirect('/dashboard')
+            res.json({check:'true'})
             //console.log('user Registered')
         })
         .catch((err)=>{
@@ -28,7 +34,7 @@ userrouter.post('/postsawo',async(req,res)=>{
         //If user exists then directly pass the Json data n redirect as well
         const data = JSON.stringify(checkuser)
         console.log(data);
-        res.redirect('/dashboard');
+        res.json({check:'false'})
     }
 
 })
