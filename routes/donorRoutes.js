@@ -1,8 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const bloodDonor = require('../models/donor');
+const User = require('../models/User');
 //const bloodReceiver = require('../models/receiver')
-router.get('/donor/home',async (req,res)=>{
+router.get('/donor/:uid',async (req,res)=>{
+   const donor = User.find({uid: req.params.uid})
+  
     await bloodReceiver.find()
     .then((result)=>{
         
@@ -20,7 +23,7 @@ router.get('/donor/home',async (req,res)=>{
     })
 })
 
-router.get('/donor/request/:id',async (req,res)=>{
+router.get('/donor/:uid/request/:id',async (req,res)=>{
     await bloodReceiver.findById(req.params.id)
     .then((result) => {
         res.statusCode = 200;
@@ -36,5 +39,3 @@ router.get('/donor/request/:id',async (req,res)=>{
 
 
 module.exports = router;
-
-
